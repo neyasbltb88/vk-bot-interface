@@ -39,7 +39,10 @@ window.navWatcher = new NavWatcher({
             // TODO: Здесь надо получать элемент с названием беседы и 
             // сравнивать его текст с константой CHAT_NAME
             if (select('.im-page--title-main-inner._im_page_peer_name').textContent == CHAT_NAME){
-            	// мы на месте)
+            	console.log('Мы на месте');
+            }
+            else {
+            	console.log('Нам не сюда');
             }
 
         }
@@ -48,7 +51,7 @@ window.navWatcher = new NavWatcher({
 
 function init() {
     // Создаем блок, в который будет монтироваться приложение
-    let appElem = document.createElement('div')
+    let appElem = newEl('div')
         // id корневого элемента приложения будет соответствовать имени приложения
     appElem.id = APP_NAME
         // и добавляем его в конец body
