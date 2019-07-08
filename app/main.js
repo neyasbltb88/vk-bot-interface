@@ -7,7 +7,7 @@ import NavWatcher from './scripts/nav-watcher'
 Vue.config.productionTip = false
 
 // Имя приложения
-const APP_NAME = 'appVue'
+const APP_NAME = 'bot_interface'
 
 // С помощью глобального миксина добавляем APP_NAME в data всех компонентов
 Vue.mixin({
