@@ -8,19 +8,36 @@ Vue.config.productionTip = false
 
 // Имя приложения
 const APP_NAME = 'bot_interface'
+const CHAT_NAME = 'БОТ'
 
 // С помощью глобального миксина добавляем APP_NAME в data всех компонентов
 Vue.mixin({
     data() {
         return {
-            APP_NAME
+            APP_NAME,
+            CHAT_NAME
         }
     }
 })
 
 // Декоратор роутера VK
 window.navWatcher = new NavWatcher({
-    callback: objLoc => console.log('Параметры коллбека перехода: ', objLoc),
+    callback: objLoc => {
+        console.log('Параметры коллбека перехода: ', objLoc)
+
+        let regex = /c(\d+)/mi;
+        let chat_id = null;
+        let res = null;
+
+        if (objLoc.sel && (res = objLoc.sel.match(regex))) {
+            chat_id = res[1];
+            console.log('Оп! Мы вбеседе с id: ', chat_id);
+
+            // TODO: Здесь надо получать элемент с названием беседы и 
+            // сравнивать его текст с константой CHAT_NAME
+
+        }
+    }
 });
 
 function init() {
@@ -43,4 +60,4 @@ function init() {
     }).$mount(`#${APP_NAME}`)
 }
 
-window.addEventListener('load', init)
+// window.addEventListener('load', init)
