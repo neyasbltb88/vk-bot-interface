@@ -3,6 +3,7 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import NavWatcher from './scripts/nav-watcher'
+import launcher from './scripts/launcher'
 
 Vue.config.productionTip = false
 
@@ -38,7 +39,7 @@ window.navWatcher = new NavWatcher({
 
             // TODO: Здесь надо получать элемент с названием беседы и 
             // сравнивать его текст с константой CHAT_NAME
-            if (select('.im-page--title-main-inner._im_page_peer_name').textContent == CHAT_NAME){
+            if (select('.im-page--title-main-inner._im_page_peer_name').textContent != CHAT_NAME){
             	console.log('Мы на месте');
             }
             else {
