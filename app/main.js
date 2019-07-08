@@ -9,6 +9,9 @@ Vue.config.productionTip = false
 // Имя приложения
 const APP_NAME = 'bot_interface'
 const CHAT_NAME = 'БОТ'
+const select = x => document.querySelector(x);
+const selectAll = x => document.querySelectorAll(x);
+const newEl = x => document.createElement(x);
 
 // С помощью глобального миксина добавляем APP_NAME в data всех компонентов
 Vue.mixin({
@@ -35,6 +38,9 @@ window.navWatcher = new NavWatcher({
 
             // TODO: Здесь надо получать элемент с названием беседы и 
             // сравнивать его текст с константой CHAT_NAME
+            if (select('.im-page--title-main-inner._im_page_peer_name').textContent == CHAT_NAME){
+            	// мы на месте)
+            }
 
         }
     }
