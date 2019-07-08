@@ -1,5 +1,5 @@
 export default function launcher(params = {}) {
-    let { condition, callback, arg, attempts } = params;
+    let { condition, callback, arg, attempts = Infinity } = params;
     let try_num = 0;
 
     requestAnimationFrame(function launch(arg) {
@@ -9,7 +9,7 @@ export default function launcher(params = {}) {
         } else if (condition.call()) {
             callback.call(this, arg);
         } else {
-            // console.log('Превышено количество попыток launcher');
+            console.log('Превышено количество попыток launcher');
         }
     }.bind(this, arg))
 }

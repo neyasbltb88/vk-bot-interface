@@ -24,6 +24,11 @@ Vue.mixin({
     }
 })
 
+function checkChatName() {
+    let chatHeader = select('.im-page--title-main-inner');
+    return chatHeader && chatHeader.textContent === CHAT_NAME;
+}
+
 // Декоратор роутера VK
 window.navWatcher = new NavWatcher({
     callback: objLoc => {
@@ -33,18 +38,25 @@ window.navWatcher = new NavWatcher({
         let chat_id = null;
         let res = null;
 
+        // Если мы зашли в любую беседу
         if (objLoc.sel && (res = objLoc.sel.match(regex))) {
             chat_id = res[1];
             console.log('Оп! Мы вбеседе с id: ', chat_id);
 
-            // TODO: Здесь надо получать элемент с названием беседы и 
-            // сравнивать его текст с константой CHAT_NAME
-            if (select('.im-page--title-main-inner._im_page_peer_name').textContent != CHAT_NAME){
-            	console.log('Мы на месте');
-            }
-            else {
-            	console.log('Нам не сюда');
-            }
+            // Работает определение беседы, но без ограничения в attempts
+            // экзкмпляры лаунчера стакаются при каждом заходе в любую беседу.
+            // Нужно сделать launcher классом с методами launch и stop
+            // и не допускать внутри класса их повторные вызызовы.
+            launcher({
+                condition: checkChatName,
+                callback() {
+                    console.log('Мы в нужной беседе');
+                },
+                attempts: 100
+            })
+
+            // Если мы вообще не в беседе
+        } else {
 
         }
     }
@@ -69,5 +81,9 @@ function init() {
         render: h => h(App)
     }).$mount(`#${APP_NAME}`)
 }
+
+// TODO: Тут надо так же запускать старт лаунчера
+// Если скрипт запустился уже в нужной беседе, то сразу активировать основную логику
+if (checkChatName()) init();
 
 // window.addEventListener('load', init)
