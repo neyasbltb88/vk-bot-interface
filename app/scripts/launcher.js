@@ -15,6 +15,8 @@ export default class Launcher {
     launch = () => {
         if (!this.condition.call(this) && this.tryNum < this.attempts && !this.wasStopped) {
             this.tryNum++;
+            console.log('this.tryNum: ', this.tryNum);
+
 
             requestAnimationFrame(this.launch);
         } else if (this.condition.call(this) && this.tryNum < this.attempts && !this.wasStopped) {

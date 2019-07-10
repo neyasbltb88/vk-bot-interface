@@ -5,6 +5,8 @@ import router from './router'
 import NavWatcher from './scripts/nav-watcher'
 import Launcher from './scripts/launcher'
 
+import getChatNames from './scripts/testApi/getChatNames';
+
 Vue.config.productionTip = false
 
 // Имя приложения
@@ -13,9 +15,11 @@ const APP_NAME = 'bot_interface'
 const APP_CONTAINER_SELECTOR = `#${APP_NAME}`
     // Параметры нашей беседы
 const CHAT_PARAMS = {
-    NAME: 'БОТ',
-    ID: undefined
-}
+        NAMES: [],
+        IDS: {}
+    }
+    // Для контроля при отладке
+window.CHAT_PARAMS = CHAT_PARAMS
 
 let wasInit = false
 
@@ -25,6 +29,8 @@ const newEl = x => document.createElement(x)
 
 // Запускает инициализацию основного кода приложения
 const initBotInterface = () => {
+    console.log('initBotInterface()');
+
     if (wasInit) return
     wasInit = true
 
@@ -63,6 +69,8 @@ const initBotInterface = () => {
 
 // Уничтожает инстанс интерфейса и удаляет его со страницы
 const destroyBotInterface = () => {
+    console.log('destroyBotInterface()');
+
     if (!wasInit) return
     wasInit = false
 
@@ -75,12 +83,27 @@ const destroyBotInterface = () => {
     if (appElem) appElem.innerHTML = ''
 }
 
+const matchChatName = chatName => {
+    if (CHAT_PARAMS.NAMES.length === 0) return
+    let result = CHAT_PARAMS.NAMES.some(name => name === chatName)
+
+    return result
+}
+
+const matchChatId = chatId => {
+    if (CHAT_PARAMS.IDS[chatId]) {
+        return true
+    } else {
+        return false
+    }
+}
+
 // Возвращает true если заголовок диалога совпадает с нашей беседой
 const checkChatName = () => {
     let result = false;
     let chatHeader = select('.im-page--title-main-inner')
 
-    if (chatHeader && chatHeader.textContent === CHAT_PARAMS.NAME) {
+    if (chatHeader && matchChatName(chatHeader.textContent)) {
         result = true
     }
 
@@ -90,7 +113,7 @@ const checkChatName = () => {
 // Проверяет находимся ли мы в нужной беседе. 
 // Принимает объект локации родного роутера вк(window.nav.objLoc)
 const checkNavToChat = (objLoc) => {
-    // console.log('Параметры коллбека перехода: ', objLoc)
+    console.log('Параметры коллбека перехода: ', objLoc)
     let regex = /c(\d+)/mi
     let chat_id = null
     let res = null
@@ -99,17 +122,21 @@ const checkNavToChat = (objLoc) => {
     if (objLoc[0] === 'im' && objLoc.sel && (res = objLoc.sel.match(regex))) {
         chat_id = res[1];
 
+        console.log('--- Мы в беседе с id: ', chat_id, ' ---');
+
+
         // Если уже ранее был найден id нашей беседы, и сейчас мы в ней
-        if (CHAT_PARAMS.ID && CHAT_PARAMS.ID === chat_id) {
+        if (matchChatId(chat_id)) {
             initBotInterface()
 
             // Если уже ранее был найден id нашей беседы, и сейчас мы НЕ в ней
-        } else if (CHAT_PARAMS.ID && CHAT_PARAMS.ID !== chat_id) {
+        } else if (!matchChatId(chat_id)) {
             destroyBotInterface()
-
-            // Если id нашей беседы еще не найден, продолжаем искать
-        } else if (!CHAT_PARAMS.ID) {
             LAUNCHERS.init.run(chat_id)
+
+            //     // Если id нашей беседы еще не найден, продолжаем искать
+            // } else if (!CHAT_PARAMS.ID) {
+            //     LAUNCHERS.init.run(chat_id)
         }
 
         // Если мы вообще не в беседе
@@ -131,7 +158,9 @@ const LAUNCHERS = {
         init: new Launcher({
             condition: checkChatName,
             callback(chat_id) {
-                CHAT_PARAMS.ID = chat_id
+                // if (!matchChatId(chat_id)) {
+                CHAT_PARAMS.IDS[chat_id] = chat_id
+                    // }
 
                 initBotInterface()
             },
@@ -145,8 +174,20 @@ const LAUNCHERS = {
         })
     }
     // Для доступа к лаунчерам из консоли во время отладки
-window[`${APP_NAME}_LAUNCHERS`] = LAUNCHERS;
+window[`${APP_NAME}_LAUNCHERS`] = LAUNCHERS
 
-// Точка входа. Запускает ожидание родного роутера ВК для анализа страницы, 
-// на которой запустился скрипт
-LAUNCHERS.navReady.run()
+const globalInit = async() => {
+    let names_json = await getChatNames()
+    try {
+        CHAT_PARAMS.NAMES = JSON.parse(names_json)
+    } catch (err) {
+        console.log('%c%s', (window.log_color) ? window.log_color.red : '', `${APP_NAME}: Не удалось получить список бесед`)
+    }
+
+    // Запускает ожидание родного роутера ВК для анализа страницы, 
+    // на которой запустился скрипт
+    LAUNCHERS.navReady.run()
+}
+
+// Точка входа
+globalInit()
