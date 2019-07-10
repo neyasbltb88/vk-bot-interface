@@ -15,25 +15,20 @@ export default class Launcher {
     launch = () => {
         if (!this.condition.call(this) && this.tryNum < this.attempts && !this.wasStopped) {
             this.tryNum++;
-            console.log('this.tryNum: ', this.tryNum);
 
             requestAnimationFrame(this.launch);
         } else if (this.condition.call(this) && this.tryNum < this.attempts && !this.wasStopped) {
             this.stop();
             this.callback(this.arg);
         } else if (this.tryNum >= this.attempts && !this.wasStopped) {
-            console.log('Превышено количество попыток launcher');
 
             this.stop();
-        } else if (this.wasStopped) {
-            console.log('launcher остановлен');
-        }
+        } else if (this.wasStopped) {}
     }
 
     run = (arg) => {
         if (this.running) return;
         if (arg !== undefined) this.arg = arg;
-        console.log('Launcher.run()');
 
         this.running = true;
         this.wasStopped = false;
@@ -44,7 +39,6 @@ export default class Launcher {
 
     stop = () => {
         if (!this.running) return;
-        console.log('Launcher.stop()');
 
         this.wasStopped = true;
         this.running = false;
