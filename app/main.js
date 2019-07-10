@@ -133,10 +133,6 @@ const checkNavToChat = (objLoc) => {
         } else if (!matchChatId(chat_id)) {
             destroyBotInterface()
             LAUNCHERS.init.run(chat_id)
-
-            //     // Если id нашей беседы еще не найден, продолжаем искать
-            // } else if (!CHAT_PARAMS.ID) {
-            //     LAUNCHERS.init.run(chat_id)
         }
 
         // Если мы вообще не в беседе
