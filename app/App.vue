@@ -1,47 +1,34 @@
 <template>
-	<div :id="APP_NAME" class="appVue">
-		<img alt="Vue logo" 
-            src="./assets/logo.png" 
-            class="logo"
-            @click="goHome">
+    <div :id="APP_NAME" :class="APP_NAME">
+        <btn-open-content @clickToggleContent="toggleContent"></btn-open-content>
 
-		<h3>Навигация</h3>
-		<ul>
-			<li>
-				<go-to :to="{name: 'HelloWorld'}">HelloWorld</go-to>
-			</li>
-			<li>
-				<go-to to="RouterTest">RouterTest</go-to>
-			</li>
-            <li>
-				<go-to to="RouterTest" remember="false">RouterTest (not remember)</go-to>
-			</li>
-		</ul>
-
-		<router-view></router-view>
-	</div>
+        <Content :is-open="openedContent"></Content>
+    </div>
 </template>
 
 <script>
-import SStorage from './scripts/sstorage'
 import { mapMutations } from 'vuex';
-
-import GoTo from './GoTo.vue';
-
+import SStorage from './scripts/sstorage'
+import BtnOpenContent from './components/BtnOpenContent.vue';
+import Content from './components/Content.vue';
 
 export default {
     name: 'app',
     data() {
         return {
-            defaultRouteName: 'HelloWorld'
+            defaultRouteName: 'HelloWorld',
+            openedContent: false
         }
     },
-    components: { GoTo },
+    components: {
+        BtnOpenContent,
+        Content
+    },
     computed: { },
     methods: {
         ...mapMutations(['setSStorage']),
-        goHome() {
-            this.$store.getters.goTo('HelloWorld', {page_: '123'}, {admin: true});
+        toggleContent() {
+            this.openedContent = !this.openedContent;
         }
     },
     created() {
@@ -65,35 +52,13 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.appVue {
-	font-family: 'Avenir', Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-}
+<style lang="sass">
+    .im-page--aside
+        display: flex
+</style>
 
-.logo {
-    cursor: pointer;
-}
 
-h3 {
-	margin: 40px 0 0;
-}
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-li {
-	display: inline-block;
-	margin: 0 10px;
-}
-a {
-	color: #42b983;
-}
+<style lang="sass" scoped>
+    // .bot_interface
 
-a.router-link-active {
-    color: #ffc000 !important;
-}
 </style>

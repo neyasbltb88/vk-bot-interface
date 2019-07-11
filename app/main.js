@@ -73,7 +73,11 @@ const createBotOpenBtn = () => {
             background-color: #dedede88;
             transition: transform 250ms cubic-bezier(0.21, 0.02, 0.46, 1) !important;
             will-change: transform;
-            /* transform: translate3d(0, -100%, 1px); */
+            transform: translate3d(0, -100%, 1px);
+        }
+
+        .im-page--history {
+            overflow: hidden;
         }
     `
 
@@ -85,7 +89,10 @@ const createBotOpenBtn = () => {
 }
 
 const destroyBotOpenBtn = () => {
-    let botOpenBtn = select(`.${APP_NAME}--wrap`).remove()
+    let botOpenBtn = select(`.${APP_NAME}--wrap`)
+    if (!botOpenBtn) return
+
+    botOpenBtn.remove()
 }
 
 // Запускает инициализацию основного кода приложения
@@ -97,15 +104,18 @@ const initBotInterface = () => {
 
     // Если на странице еще нет контейнера приложения
     if (!select(APP_CONTAINER_SELECTOR)) {
+        let searchBtn = select('.im-page--aside .im-page--header-icon_search');
+        if (!searchBtn) return
+
         // Создаем блок, в который будет монтироваться приложение
         let appElem = newEl('div')
             // id корневого элемента приложения будет соответствовать имени приложения
         appElem.id = APP_NAME
             // и добавляем его в конец body
-        document.body.appendChild(appElem)
+        searchBtn.before(appElem)
     }
 
-    createBotOpenBtn()
+    // createBotOpenBtn()
 
     // С помощью глобального миксина добавляем APP_NAME в data всех компонентов
     Vue.mixin({
@@ -137,7 +147,7 @@ const destroyBotInterface = () => {
     if (!wasInit) return
     wasInit = false
 
-    destroyBotOpenBtn()
+    // destroyBotOpenBtn()
 
     if (window[`$${APP_NAME}`]) {
         window[`$${APP_NAME}`].$destroy()
