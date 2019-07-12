@@ -112,7 +112,7 @@ const checkChatName = () => {
 // Проверяет находимся ли мы в нужной беседе. 
 // Принимает объект локации родного роутера вк(window.nav.objLoc)
 const checkNavToChat = (objLoc) => {
-    console.log('Параметры коллбека перехода: ', objLoc)
+    // console.log('Параметры коллбека перехода: ', objLoc)
     let regex = /c(\d+)/mi
     let chat_id = null
     let res = null

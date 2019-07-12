@@ -1,18 +1,13 @@
 <template>
-    <div :id="APP_NAME" :class="APP_NAME">
+    <div :id="APP_NAME" :class="APP_NAME" class="ui_search_new">
         <btn-open-content 
             @clickToggleContent="toggleContent" 
             :is-open="openedContent"
-        >
-            [ {{btnOpenText}} <dropdown-arrow :up="openedContent" :color="openedColor"/> ]
-        </btn-open-content>
+        />
 
-        <div :class="{
-            [APP_NAME + '--content-container']: true
-        }"
-            :style="{
-                height: openedContent ? '424px' : 0
-            }"
+        <div class="ui_search_new"
+            :class="{ [APP_NAME + '--content-container']: true }"
+            :style="{ height: openedContent ? '424px' : 0 }"
         >
             <Content :is-open="openedContent"></Content>
         </div>
@@ -32,8 +27,7 @@ export default {
     data() {
         return {
             defaultRouteName: 'HelloWorld',
-            openedContent: false,
-            btnOpenText: 'БОТ'
+            openedContent: false
         }
     },
     components: {
@@ -80,6 +74,9 @@ export default {
 <style lang="sass">
     .im-page--aside
         display: flex
+
+    .im-page--chat-header
+        z-index: 1000
 </style>
 
 
@@ -91,10 +88,12 @@ export default {
             height: 424px
             top: 100%
             left: 0
-            z-index: -1
             overflow: hidden
-
-    .dropdown-arrow
-        margin: 0 3px
+        &.ui_search_new
+            .ui_search_button_search
+                background-image: none !important
+                height: 100%
+                width: auto
+                padding: 0 3px
 
 </style>

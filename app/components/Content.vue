@@ -3,6 +3,7 @@
             [APP_NAME + '--content']: true,
             'open': isOpen
         }"
+        class=" ui_tabs ui_tabs_box ui_search_input_inner"
     >
         <Default></Default>
     </div>
@@ -35,8 +36,8 @@ export default {
                 justify-content: center
                 width: 100%
                 height: 100%
-                border: 1px solid rgba(105, 109, 125, 0.4) !important
-                background-color: rgb(37, 48, 60)
+                // border: 1px solid rgba(105, 109, 125, 0.4) !important
+                // background-color: rgb(37, 48, 60)
                 transition: transform 250ms cubic-bezier(0.21, 0.02, 0.46, 1) !important
                 will-change: transform
                 transform: translate3d(0, -100%, 1px)
