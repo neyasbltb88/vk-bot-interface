@@ -76,7 +76,12 @@ export default {
         display: flex
 
     .im-page--chat-header
-        z-index: 1000
+        z-index: 20
+
+    .im-page--chat-body
+        z-index: 1
+        .ui_scroll_bar_container
+            z-index: 1
 </style>
 
 
@@ -89,6 +94,7 @@ export default {
             top: 100%
             left: 0
             overflow: hidden
+            z-index: 11
         &.ui_search_new
             .ui_search_button_search
                 background-image: none !important
