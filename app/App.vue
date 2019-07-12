@@ -1,8 +1,22 @@
 <template>
     <div :id="APP_NAME" :class="APP_NAME">
-        <btn-open-content @clickToggleContent="toggleContent"></btn-open-content>
+        <btn-open-content 
+            @clickToggleContent="toggleContent" 
+            :is-open="openedContent"
+        >
+            [ {{btnOpenText}} <dropdown-arrow :up="openedContent" :color="openedColor"/> ]
+        </btn-open-content>
 
-        <Content :is-open="openedContent"></Content>
+        <div :class="{
+            [APP_NAME + '--content-container']: true
+        }"
+            :style="{
+                height: openedContent ? '424px' : 0
+            }"
+        >
+            <Content :is-open="openedContent"></Content>
+        </div>
+        
     </div>
 </template>
 
@@ -10,6 +24,7 @@
 import { mapMutations } from 'vuex';
 import SStorage from './scripts/sstorage'
 import BtnOpenContent from './components/BtnOpenContent.vue';
+import DropdownArrow from './components/DropdownArrow.vue'
 import Content from './components/Content.vue';
 
 export default {
@@ -17,14 +32,24 @@ export default {
     data() {
         return {
             defaultRouteName: 'HelloWorld',
-            openedContent: false
+            openedContent: false,
+            btnOpenText: 'БОТ'
         }
     },
     components: {
         BtnOpenContent,
+        DropdownArrow,
         Content
     },
-    computed: { },
+    computed: {
+        openedColor() {
+            if(this.openedContent) {
+                return '#ffc000';
+            } else {
+                return '#C3CFE0'
+            }
+        }
+    },
     methods: {
         ...mapMutations(['setSStorage']),
         toggleContent() {
@@ -59,6 +84,17 @@ export default {
 
 
 <style lang="sass" scoped>
-    // .bot_interface
+    .bot_interface
+        &--content-container
+            position: absolute
+            width: 100%
+            height: 424px
+            top: 100%
+            left: 0
+            z-index: -1
+            overflow: hidden
+
+    .dropdown-arrow
+        margin: 0 3px
 
 </style>

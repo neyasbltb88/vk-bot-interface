@@ -27,78 +27,8 @@ const select = x => document.querySelector(x)
 const selectAll = x => document.querySelectorAll(x)
 const newEl = x => document.createElement(x)
 
-const createBotOpenBtn = () => {
-    let searchBtn = select('.im-page--aside .im-page--header-icon_search');
-    if (!searchBtn) return
-
-    let botInterfaceWrap = newEl('div')
-    botInterfaceWrap.className = `${APP_NAME}--wrap`
-
-    let botInterfacContent = newEl('div')
-    botInterfacContent.className = `${APP_NAME}--content`
-
-    let botOpenBtn = newEl('button')
-    botOpenBtn.className = `${APP_NAME}--openBtn im-page--header-icon im-page--header-icon_search im-page-header-icon_search-shown`
-    botOpenBtn.textContent = 'БОТ'
-    botOpenBtn.setAttribute('aria-label', 'Интерфейс Бота')
-    botOpenBtn.setAttribute('onmouseover', "showTooltip(this, { forcetoup: true, shift: [0, -9], black: true, text: 'Интерфейс Бота' })")
-
-    let botOpenBtnStyle = newEl('style')
-    botOpenBtnStyle.textContent = /* css */ `
-        .im-page--aside {
-            display: flex;
-        }
-
-        .${APP_NAME}--openBtn {
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .${APP_NAME}--openBtn:before {
-            background-image: none !important;
-            display: none !important;
-        }
-
-        .im-page--chat-header-in .im-page--aside .${APP_NAME}--content {
-            position: absolute;
-            box-sizing: border-box;
-            display: flex;
-            border: 1px solid red !important;
-            width: 100%;
-            height: 424px;
-            top: 100%;
-            left: 0;
-            z-index: -1;
-            background-color: #dedede88;
-            transition: transform 250ms cubic-bezier(0.21, 0.02, 0.46, 1) !important;
-            will-change: transform;
-            transform: translate3d(0, -100%, 1px);
-        }
-
-        .im-page--history {
-            overflow: hidden;
-        }
-    `
-
-    botInterfaceWrap.appendChild(botOpenBtn)
-    botInterfaceWrap.appendChild(botInterfacContent)
-    botInterfaceWrap.appendChild(botOpenBtnStyle)
-
-    searchBtn.before(botInterfaceWrap)
-}
-
-const destroyBotOpenBtn = () => {
-    let botOpenBtn = select(`.${APP_NAME}--wrap`)
-    if (!botOpenBtn) return
-
-    botOpenBtn.remove()
-}
-
 // Запускает инициализацию основного кода приложения
 const initBotInterface = () => {
-    console.log('initBotInterface()');
-
     if (wasInit) return
     wasInit = true
 
@@ -114,8 +44,6 @@ const initBotInterface = () => {
             // и добавляем его в конец body
         searchBtn.before(appElem)
     }
-
-    // createBotOpenBtn()
 
     // С помощью глобального миксина добавляем APP_NAME в data всех компонентов
     Vue.mixin({
@@ -142,12 +70,8 @@ const initBotInterface = () => {
 
 // Уничтожает инстанс интерфейса и удаляет его со страницы
 const destroyBotInterface = () => {
-    console.log('destroyBotInterface()');
-
     if (!wasInit) return
     wasInit = false
-
-    // destroyBotOpenBtn()
 
     if (window[`$${APP_NAME}`]) {
         window[`$${APP_NAME}`].$destroy()
